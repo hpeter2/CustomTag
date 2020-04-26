@@ -233,70 +233,9 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 			strncpy(sItemString, "2000\0", 15); break;
 		case 2200:
 			strncpy(sItemString, "2200\0", 15); break;
-		case 3701:
-			strncpy(sItemString, "VFS\0",15); break;
-		case 3702:
-			strncpy(sItemString, "VFW\0",15); break;
-		case 3703:
-			strncpy(sItemString, "VFM\0",15); break;
-		case 3704:
-			strncpy(sItemString, "VFN\0",15); break;
-		case 3707:
-			strncpy(sItemString, "CR\0",15); break;
-		case 4406:
-			strncpy(sItemString, "SW\0",15); break;
-		case 4472:
-			strncpy(sItemString, "PJV\0",15); break;
-		case 4473:
-			strncpy(sItemString, "CHX4\0",15); break;
-		case 4474:
-			strncpy(sItemString, "BALL\0",15); break;
-		case 4476:
-			strncpy(sItemString, "TAXI\0",15); break;
-		case 4660:
-			strncpy(sItemString, "TWR\0",15); break;
-		case 4642:
-			strncpy(sItemString, "VDH\0",15); break;
-		case 4643:
-			strncpy(sItemString, "SSF\0",15); break;
-		case 4644:
-			strncpy(sItemString, "SV\0",15); break;
-		case 4645:
-			strncpy(sItemString, "EDHI\0",15); break;
-		case 4647:
-			strncpy(sItemString, "HL\0",15); break;
-		case 6103:
-			strncpy(sItemString, "RAFIS\0",15); break;
-		case 6311:
-			strncpy(sItemString, "FR1\0",15); break;
-		case 6312:
-			strncpy(sItemString, "FR2\0",15); break;
-		case 6313:
-			strncpy(sItemString, "FR3\0",15); break;
-		case 6314:
-			strncpy(sItemString, "FR4\0",15); break;
-		case 6315:
-			strncpy(sItemString, "FR5\0",15); break;
-		case 6316:
-			strncpy(sItemString, "FIS\0",15); break;
-		case 6317:
-			strncpy(sItemString, "VMR\0",15); break;
-		case 6550:
-			strncpy(sItemString, "DT\0",15); break;
-		case 6570:
-			strncpy(sItemString, "DB\0",15); break;
 		case 7000:
 			strncpy(sItemString, "V\0",15); break;
-		case 7001:
-			strncpy(sItemString, "VOUT\0",15); break;
-		case 7010:
-			strncpy(sItemString, "VIN\0",15); break;
-		case 7012:
-			strncpy(sItemString, "HELI\0",15); break;
-		case 7040:
-			strncpy(sItemString, "NL\0",15); break;
-		case 7050:
-			strncpy(sItemString, "NU\0",15); break;
+
 		default:
 			strncpy(sItemString, FlightPlan.GetCallsign(),15);  break;
 		}
@@ -734,6 +673,7 @@ bool tagPlugin::isVFR(int squawk)
 {
 	switch (squawk)
 	{
+	case 0:
 	case 20:
 	case 23:
 	case 24:
@@ -747,11 +687,10 @@ bool tagPlugin::isVFR(int squawk)
 	case 36:
 	case 37:
 	case 76:
-	case 7000:
 	case 1200:
 	case 2000:
 	case 2200:
-	case 0000:
+	case 7000:
 		return true;
 	default:
 		return false;
