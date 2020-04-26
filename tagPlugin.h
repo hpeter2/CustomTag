@@ -1,15 +1,10 @@
 #pragma once
 
-/*
-#using <mscorlib.dll>
-#using <System.dll>
-
-#include <tchar.h>
-#include <conio.h>
-*/
-
 #include <EuroScopePlugIn.h>
 #include "defines.h"
+
+using namespace std;
+using namespace EuroScopePlugIn;
 
 class coordination
 {
