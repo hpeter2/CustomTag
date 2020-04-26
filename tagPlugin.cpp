@@ -80,16 +80,11 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 	/*
 
 	*/
-	*pColorCode = EuroScopePlugIn::TAG_COLOR_RGB_DEFINED;
-
+	*pColorCode = EuroScopePlugIn::TAG_COLOR_DEFAULT;
 	int tmpSq = atoi(RadarTarget.GetPosition().GetSquawk());
 
-	// VFR (GREEN)
-	if (isVFR(tmpSq))
-		*pRGB = RGB(43, 166, 80);
-
 	// IFR
-	else if (FlightPlan.GetFlightPlanData().GetPlanType()[0] == 'I')
+	//else if (FlightPlan.GetFlightPlanData().GetPlanType()[0] == 'I')
 	{
 		// HANDOFF to other Station
 		if (FlightPlan.GetState() == EuroScopePlugIn::FLIGHT_PLAN_STATE_TRANSFER_FROM_ME_INITIATED)
@@ -98,8 +93,8 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 			switch (ItemCode)
 			{
 			case 1:
-			case 4: *pColorCode = EuroScopePlugIn::TAG_COLOR_ASSUMED; break;
-			default: *pRGB = RGB(193, 92, 226); break;
+			case 4:
+			default: *pRGB = RGB(255, 255, 255); break;
 			}
 		}
 
@@ -110,8 +105,8 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 			switch (ItemCode)
 			{
 			case 1:
-			case 4: *pColorCode = EuroScopePlugIn::TAG_COLOR_ASSUMED; break;
-			default: *pRGB = RGB(23, 8, 239); break;
+			case 4:
+			default: *pRGB = RGB(255, 255, 255); break;
 			}
 		}
 
@@ -119,9 +114,8 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 		else if (FlightPlan.GetTrackingControllerIsMe())
 		{
 			if (FlightPlan.GetSectorExitMinutes() == 0)		
-				*pRGB = RGB(43, 250, 0);
+				*pRGB = RGB(255, 255, 150);
 			else
-
 			// BLACK
 			*pColorCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
 		}
@@ -130,29 +124,24 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 		else if (FlightPlan.GetState() == EuroScopePlugIn::FLIGHT_PLAN_STATE_REDUNDANT || aclist.Find(RadarTarget.GetSystemID()) != NULL)
 		{
 			// MAGENTA
-			*pRGB = RGB(193, 92, 226);
+			*pRGB = RGB(0, 110, 220);
 		}
 
 		// AC will cross Airspace
 		else if (FlightPlan.GetSectorEntryMinutes() >= 0)
 		{
 			// BLUE			
-			*pRGB = RGB(23, 8, 239);
+			*pRGB = RGB(255, 255, 150);
 		}
 
 		// AC won't cross Airspace (not concerned)
 		else
 		{
 			// WHITE
-			*pRGB = RGB(255, 255, 255);
+			*pColorCode = EuroScopePlugIn::TAG_COLOR_DEFAULT;
 		}
+
 	}
-
-	// No Flightplan
-	else 
-		// WHITE
-		*pRGB = RGB(252, 252, 252);
-
 
 	// OVERRIDE
 	// COMM FAILURE
@@ -284,11 +273,6 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 	
 	// Altitude (FL), Three Digit
 	case 4:
-		if (FlightPlan.GetClearedAltitude() - RadarTarget.GetPosition().GetFlightLevel() <= 1000 && 
-			FlightPlan.GetClearedAltitude() - RadarTarget.GetPosition().GetFlightLevel() >= -100 && 
-			FlightPlan.GetClearedAltitude() != FlightPlan.GetFinalAltitude() && tmpVS > 2)
-			*pColorCode = EuroScopePlugIn::TAG_COLOR_INFORMATION;
-
 		if (RadarTarget.GetPosition().GetFlightLevel() >= 10000)
 			// 36000 -> 360
 			_itoa(RadarTarget.GetPosition().GetFlightLevel() / 100, sItemString, 10);
@@ -376,7 +360,6 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 			{
 				if (FlightPlan.GetExitCoordinationNameState() == EuroScopePlugIn::COORDINATION_STATE_REQUESTED_BY_ME)
 				{
-					*pColorCode = EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME;
 					strcpy(sItemString, FlightPlan.GetExitCoordinationPointName());
 
 					if (findById(RadarTarget.GetSystemID()) != NULL)
@@ -387,7 +370,6 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 				}
 				else if (FlightPlan.GetExitCoordinationNameState() == EuroScopePlugIn::COORDINATION_STATE_REQUESTED_BY_OTHER)
 				{
-					*pColorCode = EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_TO_ME;
 					strcpy(sItemString, FlightPlan.GetExitCoordinationPointName());
 
 					if (findById(RadarTarget.GetSystemID()) != NULL)
@@ -435,7 +417,6 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 			{
 				if (FlightPlan.GetEntryCoordinationPointState() == EuroScopePlugIn::COORDINATION_STATE_REQUESTED_BY_ME)
 				{
-					*pColorCode = EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME;
 					strcpy(sItemString, FlightPlan.GetEntryCoordinationPointName());
 
 					if (findById(RadarTarget.GetSystemID()) != NULL)
@@ -446,7 +427,6 @@ void	tagPlugin::OnGetTagItem ( EuroScopePlugIn::CFlightPlan FlightPlan, EuroScop
 				}
 				else if (FlightPlan.GetEntryCoordinationPointState() == EuroScopePlugIn::COORDINATION_STATE_REQUESTED_BY_OTHER)
 				{
-					*pColorCode = EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_TO_ME;
 					strcpy(sItemString, FlightPlan.GetEntryCoordinationPointName());
 
 					if (findById(RadarTarget.GetSystemID()) != NULL)
